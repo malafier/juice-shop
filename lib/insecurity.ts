@@ -58,7 +58,6 @@ export const verify = (token: string) => token ? (jws.verify as ((token: string,
 export const decode = (token: string) => { return jws.decode(token)?.payload }
 
 export const sanitizeHtml = (html: string) => sanitizeHtmlLib(html)
-export const sanitizeLegacy = (input = '') => input.replace(/<(?:\w+)\W+?[\w]/gi, '')
 export const sanitizeFilename = (filename: string) => sanitizeFilenameLib(filename)
 export const sanitizeSecure = (html: string): string => {
   const sanitized = sanitizeHtml(html)
@@ -72,21 +71,21 @@ export const sanitizeSecure = (html: string): string => {
 export const authenticatedUsers: IAuthenticatedUsers = {
   tokenMap: {},
   idMap: {},
-  put: function (token: string, user: ResponseWithUser) {
+  put: function(token: string, user: ResponseWithUser) {
     this.tokenMap[token] = user
     this.idMap[user.data.id] = token
   },
-  get: function (token?: string) {
+  get: function(token?: string) {
     return token ? this.tokenMap[utils.unquote(token)] : undefined
   },
-  tokenOf: function (user: UserModel) {
+  tokenOf: function(user: UserModel) {
     return user ? this.idMap[user.id] : undefined
   },
-  from: function (req: Request) {
+  from: function(req: Request) {
     const token = utils.jwtFrom(req)
     return token ? this.get(token) : undefined
   },
-  updateFrom: function (req: Request, user: ResponseWithUser) {
+  updateFrom: function(req: Request, user: ResponseWithUser) {
     const token = utils.jwtFrom(req)
     this.put(token, user)
   }
@@ -116,7 +115,7 @@ export const discountFromCoupon = (coupon?: string) => {
   }
 }
 
-function hasValidFormat (coupon: string) {
+function hasValidFormat(coupon: string) {
   return coupon.match(/(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[0-9]{2}-[0-9]{2}/)
 }
 

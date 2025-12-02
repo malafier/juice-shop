@@ -19,8 +19,8 @@ import { challenges } from '../data/datacache'
 import * as security from '../lib/insecurity'
 
 class User extends Model<
-InferAttributes<User>,
-InferCreationAttributes<User>
+  InferAttributes<User>,
+  InferCreationAttributes<User>
 > {
   declare id: CreationOptional<number>
   declare username: string | undefined
@@ -45,35 +45,22 @@ const UserModelInit = (sequelize: Sequelize) => { // vuln-code-snippet start wea
       username: {
         type: DataTypes.STRING,
         defaultValue: '',
-        set (username: string) {
-          if (utils.isChallengeEnabled(challenges.persistedXssUserChallenge)) {
-            username = security.sanitizeLegacy(username)
-          } else {
-            username = security.sanitizeSecure(username)
-          }
+        set(username: string) {
+          username = security.sanitizeSecure(username)
           this.setDataValue('username', username)
         }
       },
       email: {
         type: DataTypes.STRING,
         unique: true,
-        set (email: string) {
-          if (utils.isChallengeEnabled(challenges.persistedXssUserChallenge)) {
-            challengeUtils.solveIf(challenges.persistedXssUserChallenge, () => {
-              return utils.contains(
-                email,
-                '<iframe src="javascript:alert(`xss`)">'
-              )
-            })
-          } else {
-            email = security.sanitizeSecure(email)
-          }
+        set(email: string) {
+          email = security.sanitizeSecure(email)
           this.setDataValue('email', email)
         }
       }, // vuln-code-snippet hide-end
       password: {
         type: DataTypes.STRING,
-        set (clearTextPassword: string) {
+        set(clearTextPassword: string) {
           this.setDataValue('password', security.hash(clearTextPassword)) // vuln-code-snippet vuln-line weakPasswordChallenge
         }
       }, // vuln-code-snippet end weakPasswordChallenge
@@ -83,12 +70,12 @@ const UserModelInit = (sequelize: Sequelize) => { // vuln-code-snippet start wea
         validate: {
           isIn: [['customer', 'deluxe', 'accounting', 'admin']]
         },
-        set (role: string) {
+        set(role: string) {
           const profileImage = this.getDataValue('profileImage')
           if (
             role === security.roles.admin &&
-          (!profileImage ||
-            profileImage === '/assets/public/images/uploads/default.svg')
+            (!profileImage ||
+              profileImage === '/assets/public/images/uploads/default.svg')
           ) {
             this.setDataValue(
               'profileImage',
@@ -129,7 +116,7 @@ const UserModelInit = (sequelize: Sequelize) => { // vuln-code-snippet start wea
   User.addHook('afterValidate', async (user: User) => {
     if (
       user.email &&
-    user.email.toLowerCase() ===
+      user.email.toLowerCase() ===
       `acc0unt4nt@${config.get<string>('application.domain')}`.toLowerCase()
     ) {
       await Promise.reject(

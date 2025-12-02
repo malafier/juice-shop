@@ -67,12 +67,6 @@ export const PasswordStrengthInstruction: ChallengeInstruction = {
       resolved: waitForInputToHaveValue('#password', 'admin12')
     },
     {
-      text: "🧯 It's getting hot! Just one more digit...",
-      fixture: '#password',
-      unskippable: true,
-      resolved: waitForInputToHaveValue('#password', 'admin123')
-    },
-    {
       text: 'Okay, now press the _Log in_ button.',
       fixture: '#rememberMe',
       unskippable: true,

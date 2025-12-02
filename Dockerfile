@@ -2,7 +2,7 @@ FROM node:22 AS installer
 COPY . /juice-shop
 WORKDIR /juice-shop
 RUN npm i -g typescript ts-node
-RUN npm install --omit=dev --unsafe-perm
+RUN npm install --omit=dev # --unsafe-perm
 RUN npm dedupe --omit=dev
 RUN rm -rf frontend/node_modules
 RUN rm -rf frontend/.angular

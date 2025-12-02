@@ -50,9 +50,9 @@ export class LoginComponent implements OnInit {
   public redirectUri: string = ''
   public testingUsername = 'testing@juice-sh.op'
   public testingPassword = 'IamUsedForTesting'
-  constructor (private readonly configurationService: ConfigurationService, private readonly userService: UserService, private readonly windowRefService: WindowRefService, private readonly cookieService: CookieService, private readonly router: Router, private readonly formSubmitService: FormSubmitService, private readonly basketService: BasketService, private readonly ngZone: NgZone) { }
+  constructor(private readonly configurationService: ConfigurationService, private readonly userService: UserService, private readonly windowRefService: WindowRefService, private readonly cookieService: CookieService, private readonly router: Router, private readonly formSubmitService: FormSubmitService, private readonly basketService: BasketService, private readonly ngZone: NgZone) { }
 
-  ngOnInit (): void {
+  ngOnInit(): void {
     const email = localStorage.getItem('email')
     if (email) {
       this.user = {}
@@ -84,7 +84,7 @@ export class LoginComponent implements OnInit {
     this.formSubmitService.attachEnterKeyHandler('login-form', 'loginButton', () => { this.login() })
   }
 
-  login () {
+  login() {
     this.user = {}
     this.user.email = this.emailControl.value
     this.user.password = this.passwordControl.value
@@ -122,7 +122,8 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  googleLogin () {
+  googleLogin() {
+    // dodaj do local storage
     this.windowRefService.nativeWindow.location.replace(`${oauthProviderUrl}?client_id=${this.clientId}&response_type=token&scope=email&redirect_uri=${this.redirectUri}`)
   }
 }
